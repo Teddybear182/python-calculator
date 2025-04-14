@@ -36,13 +36,14 @@ class Calculator:
     self.result = None
 
   def calculate(self):
+    self.pc = 0
     try:
-      self.pc = 0
       while self.pc < len(program):
           
           self.result = None
           opcode = program[self.pc]
-          print(f"{self.result}, {self.pc}, {program}")
+
+          #print(f"{self.result}, {self.pc}, {program}")
 
           if opcode == "*":
             self.result = program[self.pc-1]
@@ -71,18 +72,15 @@ class Calculator:
       raise Exception("Error 1: something went wrong, check your input")
 
 
+    self.pc = 0
     try:
-      self.pc = 0
       while self.pc < len(program):
         self.result = None
         opcode = program[self.pc]
-        print(f"{self.result}, {self.pc}, {program}")
 
+        #print(f"{self.result}, {self.pc}, {program}")
 
-        if isinstance(opcode, int):
-          self.pc += 1
-
-        elif opcode in ["+", "-", "*", "/"]:
+        if opcode in ["+", "-", "*", "/"]:
           if opcode == "+":  #this is the addition
             a = program[self.pc-1]
             b = program[self.pc+1]
