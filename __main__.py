@@ -12,8 +12,6 @@ program = []
 
 for part in parts:
 
-  if line.lower() == "exit":
-      break
   if line == "":
       continue
   
@@ -23,60 +21,92 @@ for part in parts:
     elif part in ["+", "-", "*", "/"]:
       program.append(part)
   except:
-    print("Error: well well well. what did you enter? check your input")
-    continue
+    raise Exception("Error: well well well. what did you enter? check your input")
 
 
 #you can delete this line, it is for testing only
 print("  >> the numbers you entered: ", program, "\n")
-
 
 #the calculator class
 #takes the interpreted input and calculates the result depending on operators and other shi
 
 class Calculator:
   def __init__(self, program):
-    self.program = program
     self.pc = 0
-    self.result = 0
+    self.result = None
 
   def calculate(self):
     try:
-      while self.pc < len(self.program):
-        opcode = program[self.pc]
-        
-        if isinstance(opcode, int):
-          self.result = program[self.pc]
-          self.pc += 1
-        elif opcode in ["+", "-", "*", "/"]:
-          if opcode == "+":  #this is the addition
-            a = self.result
-            b = program[self.pc+1]
-            self.result = a + b
-            print(f">>> {a} + {b} = {self.result}")
-          elif opcode == "-":  #this is the subtraction
-            a = self.result
-            b = program[self.pc+1]
-            self.result = a - b
-            print(f">>> {a} - {b} = {self.result}")
-          elif opcode == "*":  #this is the multiplication
+      self.pc = 0
+      while self.pc < len(program):
+          
+          self.result = None
+          opcode = program[self.pc]
+          print(f"{self.result}, {self.pc}, {program}")
+
+          if opcode == "*":
+            self.result = program[self.pc-1]
             a = self.result
             b = program[self.pc+1]
             self.result = a * b
             print(f">>> {a} * {b} = {self.result}")
-          elif opcode == "/":  #this is the division
+            program[self.pc-1] = self.result
+            program.pop(self.pc)
+            program.pop(self.pc)
+            self.pc -= 1
+          elif opcode == "/":
+            self.result = program[self.pc-1]
             a = self.result
             b = program[self.pc+1]
-            if b <= 0:
-              print("Error: you can't divide by 0 lol")
-              break
             self.result = a / b
             print(f">>> {a} / {b} = {self.result}")
-          self.pc += 2     #move to the next opcode, making the result the first operand for the next operation
+            program[self.pc-1] = self.result
+            program.pop(self.pc)
+            program.pop(self.pc)
+            self.pc -= 1
+
+          self.pc += 1
+          
     except:
-      print("Error: hell nah smt went wrong, check input")
-      return
+      raise Exception("Error 1: something went wrong, check your input")
+
+
+    try:
+      self.pc = 0
+      while self.pc < len(program):
+        self.result = None
+        opcode = program[self.pc]
+        print(f"{self.result}, {self.pc}, {program}")
+
+
+        if isinstance(opcode, int):
+          self.pc += 1
+
+        elif opcode in ["+", "-", "*", "/"]:
+          if opcode == "+":  #this is the addition
+            a = program[self.pc-1]
+            b = program[self.pc+1]
+            self.result = a + b
+            print(f">>> {a} + {b} = {self.result}")
+            program[self.pc-1] = self.result
+            program.pop(self.pc)
+            program.pop(self.pc)
+            self.pc -= 1
+            
+          if opcode == "-":  #this is the subtraction
+            a = program[self.pc-1]
+            b = program[self.pc+1]
+            self.result = a - b
+            print(f">>> {a} - {b} = {self.result}")
+            program[self.pc-1] = self.result
+            program.pop(self.pc)
+            program.pop(self.pc)
+            self.pc -= 1
+
+        self.pc += 1     #move to the next opcode, making the result the first operand for the next operation
+
+    except:
+      raise Exception("Error 2: something went wrong, check your input")
 
 calculator = Calculator(program)  #starting and running the calculator
 calculator.calculate()
-
